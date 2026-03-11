@@ -1,186 +1,186 @@
-drop database if exists Shop;
+DROP  DATABASE IF EXISTS shop;
 
-create database if not exists Shop;
+CREATE DATABASE IF NOT EXISTS shop;
 
-use Shop;
+USE shop;
 
-create table wallet
+CREATE TABLE wallet
 (
-	Id Int auto_increment PRIMARY KEY,
-	Currency DECIMAL(10,2) not null
+    id Int AUTO_INCREMENT PRIMARY KEY,
+    currency DECIMAL(10,2) NOT NULL
 );
 
-create table client(
-	Id Int auto_increment PRIMARY KEY,
-	Username VARCHAR(20) NOT NULL,
-	Password_Hash VARCHAR(20) NOT NULL,
-	Wallet_Id INT NOT NULL,
+CREATE TABLE client(
+                       id Int AUTO_INCREMENT PRIMARY KEY,
+                       username VARCHAR(20) NOT NULL,
+                       password_hash VARCHAR(20) NOT NULL,
+                       wallet_id INT NOT NULL,
 
-	CONSTRAINT fk_wallet_client
-	FOREIGN KEY (Wallet_Id)
-	REFERENCES wallet (Id)
-	ON DELETE RESTRICT
-	ON UPDATE CASCADE
+                       CONSTRAINT fk_wallet_client
+                           FOREIGN KEY (wallet_id)
+                               REFERENCES wallet (id)
+                               ON DELETE RESTRICT
+                               ON UPDATE CASCADE
 );
 
-create table player
+CREATE TABLE player
 (
-	Id Int primary key,
-	OtherAlias VARCHAR(20),
-	AppsPlayed Int not null,
+    id Int PRIMARY KEY,
+    other_alias VARCHAR(20),
+    apps_played Int NOT NULL,
 
-	CONSTRAINT fk_player_client
-	FOREIGN KEY (Id)
-	REFERENCES client(Id)
-	ON DELETE RESTRICT
-	ON UPDATE CASCADE
+    CONSTRAINT fk_player_client
+        FOREIGN KEY (id)
+            REFERENCES client(id)
+            ON DELETE RESTRICT
+            ON UPDATE CASCADE
 );
 
-create table developer
+CREATE TABLE developer
 (
-	Id Int primary key,
-	BrandName VARCHAR(20) not null,
-	AppsPublished Int not null,
+    id Int PRIMARY KEY,
+    brand_name VARCHAR(20) NOT NULL,
+    apps_published Int NOT NULL,
 
-	CONSTRAINT fk_developer_client
-	FOREIGN KEY (Id)
-	REFERENCES client(Id)
-	ON DELETE RESTRICT
-	ON UPDATE CASCADE
+    CONSTRAINT fk_developer_client
+        FOREIGN KEY (id)
+            REFERENCES client(id)
+            ON DELETE RESTRICT
+            ON UPDATE CASCADE
 );
 
-create table creditCard
+CREATE TABLE creditCard
 (
-	Number VARCHAR(16) primary key,
-	Cvc Int not null,
-	ExpiredDate Date not null
+    number VARCHAR(16) PRIMARY KEY,
+    cvc Int NOT NULL,
+    expired_date Date NOT NULL
 );
 
-create table contain
+CREATE TABLE contain
 (
-	WalletId Int not null,
-	CardNumber VARCHAR(16) not null,
+    wallet_id Int NOT NULL,
+    card_number VARCHAR(16) NOT NULL,
 
-	primary key(WalletId, CardNumber),
+    PRIMARY KEY(wallet_id, card_number),
 
-	CONSTRAINT fk_contain_wallet
-	FOREIGN KEY (WalletId)
-	REFERENCES wallet (Id)
-	ON DELETE RESTRICT
-	ON UPDATE CASCADE,
+    CONSTRAINT fk_contain_wallet
+        FOREIGN KEY (wallet_id)
+            REFERENCES wallet (id)
+            ON DELETE RESTRICT
+            ON UPDATE CASCADE,
 
-	CONSTRAINT fk_contain_creditCard
-	FOREIGN KEY (CardNumber)
-	REFERENCES creditCard (Number)
-	ON DELETE RESTRICT
-	ON UPDATE CASCADE
+    CONSTRAINT fk_contain_creditCard
+        FOREIGN KEY (card_number)
+            REFERENCES creditCard(number)
+            ON DELETE RESTRICT
+            ON UPDATE CASCADE
 );
 
-create table project(
-	Id Int auto_increment primary key,
-	DevId Int,
-	Title VARCHAR(20) not null,
-	Description VARCHAR(100),
-	Portray longblob,
+CREATE TABLE project(
+                        id Int AUTO_INCREMENT PRIMARY KEY,
+                        dev_id Int,
+                        title VARCHAR(20),
+                        description VARCHAR(100),
+                        portray longblob,
 
-	CONSTRAINT fk_project_developer
-	FOREIGN KEY (DevId)
-	REFERENCES developer (Id)
-	ON DELETE RESTRICT
-	ON UPDATE CASCADE
+                        CONSTRAINT fk_project_developer
+                            FOREIGN KEY (dev_id)
+                                REFERENCES developer (id)
+                                ON DELETE RESTRICT
+                                ON UPDATE CASCADE
 );
 
-create table genre(
-	IdGenero Int auto_increment primary key,
-	Name VARCHAR(30) not null
+CREATE TABLE genre(
+                      id_genero Int AUTO_INCREMENT PRIMARY KEY,
+                      name VARCHAR(30) NOT NULL
 );
 
-create table projectGenre(
-	DevId Int not null,
-	IdGenero Int not null,
+CREATE TABLE projectGenre(
+                             dev_id Int NOT NULL,
+                             id_genero Int NOT NULL,
 
-	primary key(DevId, IdGenero),
+                             PRIMARY KEY(dev_id, id_genero),
 
-	CONSTRAINT fk_projectGenre_project
-	FOREIGN KEY (DevId)
-	REFERENCES project(DevId)
-	ON DELETE RESTRICT
-	ON UPDATE CASCADE,
+                             CONSTRAINT fk_projectGenre_project
+                                 FOREIGN KEY (dev_id)
+                                     REFERENCES project(dev_id)
+                                     ON DELETE RESTRICT
+                                     ON UPDATE CASCADE,
 
-	CONSTRAINT fk_projectGenre_genre
-	FOREIGN KEY (IdGenero)
-	REFERENCES genre(IdGenero)
-	ON DELETE RESTRICT
-	ON UPDATE CASCADE
+                             CONSTRAINT fk_projectGenre_genre
+                                 FOREIGN KEY (id_genero)
+                                     REFERENCES genre(id_genero)
+                                     ON DELETE RESTRICT
+                                     ON UPDATE CASCADE
 );
 
-create table application(
-	DevId Int primary key,
-	LaunchedDate DATE,
-	ReceiptId INT,
+CREATE TABLE application(
+                            dev_id Int PRIMARY KEY,
+                            launched_date DATE,
+                            receipt_id INT,
 
-	CONSTRAINT fk_application_project
-	FOREIGN KEY (DevId)
-	REFERENCES project(DevId)
-	ON DELETE restrict
-	ON UPDATE cascade
+                            CONSTRAINT fk_application_project
+                                FOREIGN KEY (dev_id)
+                                    REFERENCES project(dev_id)
+                                    ON DELETE RESTRICT
+                                    ON UPDATE CASCADE
 );
 
-create table run(
-	ClientId Int not null,
-	DevId Int not null,
-	CounterHours Int,
+CREATE TABLE run(
+                    client_id Int NOT NULL,
+                    dev_id Int NOT NULL,
+                    counter_hours Int,
 
-	primary key(ClientId, DevId),
+                    PRIMARY KEY(client_id, dev_id),
 
-	CONSTRAINT fk_run_client
-	FOREIGN KEY (ClientId)
-	REFERENCES client(Id)
-	ON DELETE restrict
-	ON UPDATE cascade,
+                    CONSTRAINT fk_run_client
+                        FOREIGN KEY (client_id)
+                            REFERENCES client(id)
+                            ON DELETE RESTRICT
+                            ON UPDATE CASCADE,
 
-	CONSTRAINT fk_run_application
-	FOREIGN KEY (DevId)
-	REFERENCES application(DevId)
-	ON DELETE RESTRICT
-	ON UPDATE CASCADE
+                    CONSTRAINT fk_run_application
+                        FOREIGN KEY (dev_id)
+                            REFERENCES application(dev_id)
+                            ON DELETE RESTRICT
+                            ON UPDATE CASCADE
 );
 
-create table receipt(
-	Id Int auto_increment primary key,
-	Price DECIMAL(10,2) not null,
-	DevId Int not null,
+CREATE TABLE receipt(
+                        id Int AUTO_INCREMENT PRIMARY KEY,
+                        price DECIMAL(10,2) NOT NULL,
+                        dev_id Int NOT NULL,
 
-	CONSTRAINT fk_receipt_application
-	FOREIGN KEY (DevId)
-	REFERENCES application(DevId)
-	ON DELETE restrict
-	ON UPDATE cascade
+                        CONSTRAINT fk_receipt_application
+                            FOREIGN KEY (dev_id)
+                                REFERENCES application(dev_id)
+                                ON DELETE RESTRICT
+                                ON UPDATE CASCADE
 );
 
-create table pay(
-	ReceiptId Int not null,
-	WalletId Int not null,
-	ClientId Int not null,
-	Date DATE not null,
+CREATE TABLE pay(
+                    receipt_id Int NOT NULL,
+                    wallet_id Int NOT NULL,
+                    client_id Int NOT NULL,
+                    pay_date DATE NOT NULL,
 
-	primary key(ReceiptId, WalletId),
+                    PRIMARY KEY(receipt_id, wallet_id),
 
-	CONSTRAINT fk_pay_receipt
-	FOREIGN KEY (ReceiptId)
-	REFERENCES receipt(Id)
-	ON DELETE restrict
-	ON UPDATE cascade,
+                    CONSTRAINT fk_pay_receipt
+                        FOREIGN KEY (receipt_id)
+                            REFERENCES receipt(id)
+                            ON DELETE RESTRICT
+                            ON UPDATE CASCADE,
 
-	CONSTRAINT fk_pay_wallet
-	FOREIGN KEY (WalletId)
-	REFERENCES wallet (Id)
-	ON DELETE RESTRICT
-	ON UPDATE cascade,
+                    CONSTRAINT fk_pay_wallet
+                        FOREIGN KEY (wallet_id)
+                            REFERENCES wallet (id)
+                            ON DELETE RESTRICT
+                            ON UPDATE CASCADE,
 
-	CONSTRAINT fk_pay_client
-	FOREIGN KEY (ClientId)
-	REFERENCES client(Id)
-	ON DELETE RESTRICT
-	ON UPDATE cascade
+                    CONSTRAINT fk_pay_client
+                        FOREIGN KEY (client_id)
+                            REFERENCES client(id)
+                            ON DELETE RESTRICT
+                            ON UPDATE CASCADE
 );
