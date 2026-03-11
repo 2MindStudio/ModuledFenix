@@ -8,6 +8,7 @@ public class FenixServerApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(FenixServerApplication.class, args);
+        //A
     }
 
 }
