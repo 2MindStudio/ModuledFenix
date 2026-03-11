@@ -10,5 +10,3 @@ public class FenixServerApplication {
         SpringApplication.run(FenixServerApplication.class, args);
     }
 }
-
-//a
