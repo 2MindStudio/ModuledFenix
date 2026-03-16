@@ -4,104 +4,104 @@ CREATE DATABASE IF NOT EXISTS shop;
 
 USE shop;
 
-CREATE TABLE Client
+CREATE TABLE client
 (
-    Id Int PRIMARY KEY AUTO_INCREMENT,
-    Username VARCHAR(25) UNIQUE,
-    Password_hash VARCHAR(128),
-    Email VARCHAR(50) UNIQUE
+    id Int PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(25) UNIQUE,
+    password_hash VARCHAR(128),
+    email VARCHAR(50) UNIQUE
 );
 
-CREATE TABLE Project
+CREATE TABLE project
 (
-    Id Int PRIMARY KEY AUTO_INCREMENT,
-    Name VARCHAR(20),
-    Version VARCHAR(20),
-    Version_date DATE,
-    S3_url VARCHAR(200) UNIQUE
+    id Int PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(20),
+    version VARCHAR(20),
+    version_date DATE,
+    s3_url VARCHAR(200) UNIQUE
 );
 
-CREATE TABLE Develop
+CREATE TABLE develop
 (
-    Client_id Int NOT NULL,
-    Project_id Int NOT NULL,
-    PRIMARY KEY(Client_id, Project_id),
-    CONSTRAINT fk_Develop_Client
-        FOREIGN KEY (Client_id)
-            REFERENCES Client(Id)
+    client_id Int NOT NULL,
+    project_id Int NOT NULL,
+    PRIMARY KEY(client_id, project_id),
+    CONSTRAINT fk_develop_client
+        FOREIGN KEY (client_id)
+            REFERENCES client(id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE,
-    CONSTRAINT fk_Develop_Project
-        FOREIGN KEY (Project_id)
-            REFERENCES Project(Id)
+    CONSTRAINT fk_develop_project
+        FOREIGN KEY (project_id)
+            REFERENCES project(id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE
 );
 
-CREATE TABLE Application
+CREATE TABLE application
 (
-    Id Int PRIMARY KEY AUTO_INCREMENT,
-    Title VARCHAR(50) UNIQUE,
-    Description VARCHAR(250),
-    Published_date DATE,
-    Price DECIMAL(6,2),
-    Project_id Int NOT NULL,
-    CONSTRAINT fk_Application_Project
-        FOREIGN KEY (Project_id)
-            REFERENCES Project(Id)
+    id Int PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(50) UNIQUE,
+    description VARCHAR(250),
+    published_date DATE,
+    price DECIMAL(6,2),
+    project_id Int NOT NULL,
+    CONSTRAINT fk_application_project
+        FOREIGN KEY (project_id)
+            REFERENCES project(id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE
 );
 
-CREATE TABLE Genre
+CREATE TABLE genre
 (
-    Id Int PRIMARY KEY AUTO_INCREMENT,
-    Type VARCHAR(30)
+    id Int PRIMARY KEY AUTO_INCREMENT,
+    genre_type VARCHAR(30)
 );
 
-CREATE TABLE App_genre
+CREATE TABLE app_genre
 (
-    Application_id Int NOT NULL,
-    Genre_id Int NOT NULL,
-    PRIMARY KEY(Application_id,Genre_id),
-    CONSTRAINT fk_App_genre_Application
-        FOREIGN KEY (Application_id)
-            REFERENCES Application(Id)
+    application_id Int NOT NULL,
+    genre_id Int NOT NULL,
+    PRIMARY KEY(application_id,genre_id),
+    CONSTRAINT fk_app_genre_application
+        FOREIGN KEY (application_id)
+            REFERENCES application(id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE,
-    CONSTRAINT fk_App_genre_Genre
-        FOREIGN KEY (Genre_id)
-            REFERENCES Genre(Id)
+    CONSTRAINT fk_app_genre_genre
+        FOREIGN KEY (genre_id)
+            REFERENCES genre(id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE
 );
 
-CREATE TABLE Purchase
+CREATE TABLE purchase
 (
-    Id Int PRIMARY KEY AUTO_INCREMENT,
-    Client_id Int NOT NULL,
-    Payment_date DATE,
-    Paid DECIMAL(6,2),
-    CONSTRAINT fk_Purchase_Client
-        FOREIGN KEY (Client_id)
-            REFERENCES Client(Id)
+    id Int PRIMARY KEY AUTO_INCREMENT,
+    client_id Int NOT NULL,
+    payment_date DATE,
+    paid DECIMAL(6,2),
+    CONSTRAINT fk_purchase_client
+        FOREIGN KEY (client_id)
+            REFERENCES client(id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE
 );
 
-CREATE TABLE Purchase_item
+CREATE TABLE purchase_app
 (
-    Purchase_id Int NOT NULL,
-    Application_id Int NOT NULL,
-    PRIMARY KEY(Purchase_id,Application_id),
-    CONSTRAINT fk_Purchase_item_Purchase
-        FOREIGN KEY (Purchase_id)
-            REFERENCES Purchase(Id)
+    purchase_id Int NOT NULL,
+    application_id Int NOT NULL,
+    PRIMARY KEY(purchase_id,application_id),
+    CONSTRAINT fk_purchase_app_purchase
+        FOREIGN KEY (purchase_id)
+            REFERENCES purchase(id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE,
-    CONSTRAINT fk_Purchase_item_Application
-        FOREIGN KEY (Application_id)
-            REFERENCES Application(Id)
+    CONSTRAINT fk_purchase_app_application
+        FOREIGN KEY (application_id)
+            REFERENCES application(id)
             ON DELETE RESTRICT
             ON UPDATE CASCADE
 );
