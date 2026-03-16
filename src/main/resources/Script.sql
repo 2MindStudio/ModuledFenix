@@ -45,7 +45,7 @@ CREATE TABLE application
     description VARCHAR(250),
     published_date DATE,
     price DECIMAL(6,2),
-    project_id Int NOT NULL,
+    project_id Int UNIQUE,
     CONSTRAINT fk_application_project
         FOREIGN KEY (project_id)
             REFERENCES project(id)
