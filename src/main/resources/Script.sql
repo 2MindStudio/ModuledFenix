@@ -44,8 +44,9 @@ CREATE TABLE application
     title VARCHAR(50) UNIQUE,
     description VARCHAR(250),
     published_date DATE,
+    portray LONGBLOB,
     price DECIMAL(6,2),
-    project_id Int UNIQUE,
+    project_id Int NOT NULL,
     CONSTRAINT fk_application_project
         FOREIGN KEY (project_id)
             REFERENCES project(id)
@@ -93,6 +94,7 @@ CREATE TABLE purchase_app
 (
     purchase_id Int NOT NULL,
     application_id Int NOT NULL,
+    price_at_purchase DECIMAL(6,2),
     PRIMARY KEY(purchase_id,application_id),
     CONSTRAINT fk_purchase_app_purchase
         FOREIGN KEY (purchase_id)
@@ -105,3 +107,82 @@ CREATE TABLE purchase_app
             ON DELETE RESTRICT
             ON UPDATE CASCADE
 );
+
+
+
+INSERT INTO client (username, password_hash, email) VALUES
+                                                        ('alice_dev', 'hash123', 'alice@email.com'),
+                                                        ('bob_code', 'hash456', 'bob@email.com'),
+                                                        ('charlie_prog', 'hash789', 'charlie@email.com'),
+                                                        ('david_builder', 'hash111', 'david@email.com'),
+                                                        ('eva_coder', 'hash222', 'eva@email.com'),
+                                                        ('frank_dev', 'hash333', 'frank@email.com');
+
+INSERT INTO project (name, version, version_date, s3_url) VALUES
+                                                              ('EngineX', '1.0', '2024-01-10', 'https://s3.aws.com/enginex'),
+                                                              ('PixelCore', '2.1', '2024-03-15', 'https://s3.aws.com/pixelcore'),
+                                                              ('AIHelper', '0.9', '2024-05-20', 'https://s3.aws.com/aihelper'),
+                                                              ('CloudSync', '1.3', '2024-04-05', 'https://s3.aws.com/cloudsync'),
+                                                              ('GameKit', '3.0', '2024-02-11', 'https://s3.aws.com/gamekit');
+
+INSERT INTO develop (client_id, project_id) VALUES
+                                                (1,1),
+                                                (1,2),
+                                                (2,2),
+                                                (2,4),
+                                                (3,3),
+                                                (4,1),
+                                                (4,5),
+                                                (5,3),
+                                                (6,4);
+
+INSERT INTO application (title, description, published_date, portray, price, project_id) VALUES
+                                                                                             ('Space Adventure', 'Sci-fi exploration game', '2024-06-01', NULL, 19.99, 1),
+                                                                                             ('Pixel Racer', 'Retro racing arcade game', '2024-06-15', NULL, 9.99, 2),
+                                                                                             ('AI Assistant Pro', 'Smart AI productivity tool', '2024-07-10', NULL, 29.99, 3),
+                                                                                             ('Cloud Notes', 'Note taking with cloud sync', '2024-07-12', NULL, 4.99, 4),
+                                                                                             ('Dungeon Crawler', 'Classic dungeon RPG', '2024-07-18', NULL, 14.99, 5);
+
+INSERT INTO genre (genre_type) VALUES
+                                   ('Action'),
+                                   ('Racing'),
+                                   ('Productivity'),
+                                   ('Sci-Fi'),
+                                   ('Adventure'),
+                                   ('RPG');
+
+INSERT INTO app_genre (application_id, genre_id) VALUES
+                                                     (1,1),
+                                                     (1,4),
+                                                     (1,5),
+                                                     (2,2),
+                                                     (2,1),
+                                                     (3,3),
+                                                     (4,3),
+                                                     (5,6),
+                                                     (5,5);
+
+INSERT INTO purchase (client_id, payment_date, paid) VALUES
+                                                         (2, '2024-07-20', 19.99),
+                                                         (3, '2024-07-21', 39.98),
+                                                         (1, '2024-07-22', 9.99),
+                                                         (4, '2024-07-23', 24.98),
+                                                         (5, '2024-07-24', 29.99),
+                                                         (6, '2024-07-25', 34.98);
+
+INSERT INTO purchase_app (purchase_id, application_id, price_at_purchase) VALUES
+                                                                              (1,1,19.99),
+                                                                              (2,1,19.99),
+                                                                              (2,3,19.99),
+                                                                              (3,2,9.99),
+                                                                              (4,2,9.99),
+                                                                              (4,5,14.99),
+                                                                              (5,3,29.99),
+                                                                              (6,1,19.99),
+                                                                              (6,5,14.99);
+
+
+
+
+
+
