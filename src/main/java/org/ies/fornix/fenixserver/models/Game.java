@@ -1,0 +1,60 @@
+package org.ies.fornix.fenixserver.models;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "game")
+public class Game {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(unique = true)
+    private String title;
+
+    @ManyToOne
+    @JoinColumn(name = "dev_id")
+    private Client dev;
+
+    private String description;
+
+    @Column(name = "published_date")
+    private LocalDate publishedDate;
+
+    @Column(name = "s3_path_generic", unique = true)
+    private String s3PathGeneric;
+
+    @Column(name = "tamano_mb")
+    private BigDecimal tamanoMb;
+
+    private Integer downloads;
+
+    private BigDecimal price;
+
+    @ManyToMany
+    @JoinTable(
+            name = "game_tag",
+            joinColumns = @JoinColumn(name = "game_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> tags;
+
+    @OneToMany(mappedBy = "game")
+    private List<Purchase> purchases;
+
+    @OneToMany(mappedBy = "game")
+    private List<Wishlist> wishlists;
+
+    @OneToMany(mappedBy = "game")
+    private List<Teaser> teasers;
+}

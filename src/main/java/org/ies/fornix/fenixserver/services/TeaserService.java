@@ -1,0 +1,48 @@
+package org.ies.fornix.fenixserver.services;
+
+import org.ies.fornix.fenixserver.dto.teaser.TeaserResponseDTO;
+import org.ies.fornix.fenixserver.models.Teaser;
+import org.ies.fornix.fenixserver.repositories.TeaserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class TeaserService {
+
+    @Autowired
+    private TeaserRepository teaserRepository;
+
+    public List<TeaserResponseDTO> getByGameId(Integer gameId) {
+        List<Teaser> teasers = teaserRepository.findByGameId(gameId);
+        List<TeaserResponseDTO> response = new ArrayList<>();
+
+        for (Teaser teaser : teasers) {
+            response.add(toResponseDTO(teaser));
+        }
+
+        return response;
+    }
+
+    public List<TeaserResponseDTO> getByGameIdAndType(Integer gameId, String type) {
+        List<Teaser> teasers = teaserRepository.findByGameIdAndType(gameId, type);
+        List<TeaserResponseDTO> response = new ArrayList<>();
+
+        for (Teaser teaser : teasers) {
+            response.add(toResponseDTO(teaser));
+        }
+
+        return response;
+    }
+
+    private TeaserResponseDTO toResponseDTO(Teaser teaser) {
+        TeaserResponseDTO dto = new TeaserResponseDTO();
+        dto.setId(teaser.getId());
+        dto.setGameId(teaser.getGame().getId());
+        dto.setFileName(teaser.getFileName());
+        dto.setType(teaser.getType());
+        return dto;
+    }
+}
