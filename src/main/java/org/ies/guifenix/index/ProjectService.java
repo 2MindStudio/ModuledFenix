@@ -3,6 +3,7 @@ package org.ies.guifenix.index;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Path;
 import java.util.List;
 
 @AllArgsConstructor
@@ -14,9 +15,10 @@ public class ProjectService {
     public List<Project> getAllProjects() {
         return projectRepository.findAll();
     }
-    public void saveProject(String projectName) {
+    public void saveProject(String projectName, String path) {
         Project newProject = new Project();
         newProject.setName(projectName);
+        newProject.setDbPath(Path.of(path));
         projectRepository.save(newProject);
     }
 

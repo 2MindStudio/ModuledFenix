@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -19,13 +20,33 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
-    @Column(name= "data_path")
-    private String path;
-    @Column(name="created_at")
+
+    @Convert(converter = PathConverter.class)
+    @Column(name = "db_path", nullable = false, unique = true)
+    private Path dbPath;
+
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
-    @Column(name="updated_at")
+
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    // Automatically set before insert
+    @PrePersist
+    protected void onCreate() {
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    // Automatically set before update
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
 
     @Override
     public boolean equals(Object o) {
